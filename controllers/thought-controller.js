@@ -54,9 +54,29 @@ async updateThought(req, res) {
     }
 },
 //deleting thought
+// async deleteThought(req, res) {
+//     try {
+//         const thoughtData = await Thought.findOneAndRemove({ _id: req.params.thoughtId });
+//         if (!thoughtData) {
+//             return res.status(404).json({ message: 'No thought with that ID' });
+//         }
+//         const userData = await User.findOneAndUpdate(
+//             { thoughts: req.params.thoughtId },
+//             { $pull: { thoughts: req.params.thoughtId } },
+//             { new: true }
+//         );
+//         res.status(200).json({ message: 'Thought deleted' });
+//     } catch (err) {
+//         res.status(500).json(err);
+//     }
+// },
+
 async deleteThought(req, res) {
     try {
+        console.log('Deleting thought:', req.params);
         const thoughtData = await Thought.findOneAndRemove({ _id: req.params.thoughtId });
+        console.log('Thought data:', thoughtData);
+
         if (!thoughtData) {
             return res.status(404).json({ message: 'No thought with that ID' });
         }
@@ -65,11 +85,16 @@ async deleteThought(req, res) {
             { $pull: { thoughts: req.params.thoughtId } },
             { new: true }
         );
+        console.log('User data:', userData);
+
         res.status(200).json({ message: 'Thought deleted' });
     } catch (err) {
+        console.error('Error deleting thought:', err);
         res.status(500).json(err);
     }
 },
+
+
 //adding reaction to thought
 async addReaction(req, res) {
     try {
